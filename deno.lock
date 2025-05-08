@@ -1,0 +1,110 @@
+{
+  "version": "4",
+  "specifiers": {
+    "jsr:@deno-kit/kit@0": "0.0.17",
+    "jsr:@qnighy/dedent@0.1.2": "0.1.2",
+    "jsr:@std/assert@1": "1.0.13",
+    "jsr:@std/assert@^1.0.12": "1.0.13",
+    "jsr:@std/async@^1.0.12": "1.0.12",
+    "jsr:@std/cli@1": "1.0.17",
+    "jsr:@std/data-structures@^1.0.6": "1.0.7",
+    "jsr:@std/dotenv@0": "0.225.3",
+    "jsr:@std/fmt@1": "1.0.7",
+    "jsr:@std/fs@1": "1.0.17",
+    "jsr:@std/fs@^1.0.16": "1.0.17",
+    "jsr:@std/internal@^1.0.6": "1.0.6",
+    "jsr:@std/json@^1.0.2": "1.0.2",
+    "jsr:@std/jsonc@1": "1.0.2",
+    "jsr:@std/net@^1.0.4": "1.0.4",
+    "jsr:@std/path@1": "1.0.9",
+    "jsr:@std/path@^1.0.8": "1.0.9",
+    "jsr:@std/path@^1.0.9": "1.0.9",
+    "jsr:@std/testing@1": "1.0.11"
+  },
+  "jsr": {
+    "@deno-kit/kit@0.0.17": {
+      "integrity": "0dd77380bfa03724485afcc3fb8d26c84c485da2b239b2b50c5961e16e765bc8",
+      "dependencies": [
+        "jsr:@std/cli",
+        "jsr:@std/dotenv",
+        "jsr:@std/fmt",
+        "jsr:@std/fs@1",
+        "jsr:@std/path@1"
+      ]
+    },
+    "@qnighy/dedent@0.1.2": {
+      "integrity": "9e420cff5b0082dba168385c9dfc56f25ef9a07999605e5fc9bc2058529998ee"
+    },
+    "@std/assert@1.0.13": {
+      "integrity": "ae0d31e41919b12c656c742b22522c32fb26ed0cba32975cb0de2a273cb68b29",
+      "dependencies": [
+        "jsr:@std/internal"
+      ]
+    },
+    "@std/async@1.0.12": {
+      "integrity": "d1bfcec459e8012846fe4e38dfc4241ab23240ecda3d8d6dfcf6d81a632e803d"
+    },
+    "@std/cli@1.0.17": {
+      "integrity": "e15b9abe629e17be90cc6216327f03a29eae613365f1353837fa749aad29ce7b"
+    },
+    "@std/data-structures@1.0.7": {
+      "integrity": "16932d2c8d281f65eaaa2209af2473209881e33b1ced54cd1b015e7b4cdbb0d2"
+    },
+    "@std/dotenv@0.225.3": {
+      "integrity": "a95e5b812c27b0854c52acbae215856d9cce9d4bbf774d938c51d212711e8d4a"
+    },
+    "@std/fmt@1.0.7": {
+      "integrity": "2a727c043d8df62cd0b819b3fb709b64dd622e42c3b1bb817ea7e6cc606360fb"
+    },
+    "@std/fs@1.0.17": {
+      "integrity": "1c00c632677c1158988ef7a004cb16137f870aafdb8163b9dce86ec652f3952b",
+      "dependencies": [
+        "jsr:@std/path@^1.0.9"
+      ]
+    },
+    "@std/internal@1.0.6": {
+      "integrity": "9533b128f230f73bd209408bb07a4b12f8d4255ab2a4d22a1fd6d87304aca9a4"
+    },
+    "@std/json@1.0.2": {
+      "integrity": "d9e5497801c15fb679f55a2c01c7794ad7a5dfda4dd1bebab5e409cb5e0d34d4"
+    },
+    "@std/jsonc@1.0.2": {
+      "integrity": "909605dae3af22bd75b1cbda8d64a32cf1fd2cf6efa3f9e224aba6d22c0f44c7",
+      "dependencies": [
+        "jsr:@std/json"
+      ]
+    },
+    "@std/net@1.0.4": {
+      "integrity": "2f403b455ebbccf83d8a027d29c5a9e3a2452fea39bb2da7f2c04af09c8bc852"
+    },
+    "@std/path@1.0.9": {
+      "integrity": "260a49f11edd3db93dd38350bf9cd1b4d1366afa98e81b86167b4e3dd750129e"
+    },
+    "@std/testing@1.0.11": {
+      "integrity": "12b3db12d34f0f385a26248933bde766c0f8c5ad8b6ab34d4d38f528ab852f48",
+      "dependencies": [
+        "jsr:@std/assert@^1.0.12",
+        "jsr:@std/async",
+        "jsr:@std/data-structures",
+        "jsr:@std/fs@^1.0.16",
+        "jsr:@std/internal",
+        "jsr:@std/path@^1.0.8"
+      ]
+    }
+  },
+  "workspace": {
+    "dependencies": [
+      "jsr:@deno-kit/kit@0",
+      "jsr:@qnighy/dedent@0.1.2",
+      "jsr:@std/assert@1",
+      "jsr:@std/cli@1",
+      "jsr:@std/dotenv@0",
+      "jsr:@std/fmt@1",
+      "jsr:@std/fs@1",
+      "jsr:@std/jsonc@1",
+      "jsr:@std/net@^1.0.4",
+      "jsr:@std/path@1",
+      "jsr:@std/testing@1"
+    ]
+  }
+}

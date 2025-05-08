@@ -1,0 +1,96 @@
+---
+description:
+globs: README.md,deno.jsonc,CHANGELOG.md,src/mod.ts,src/cli.ts,examples/*.*
+alwaysApply: false
+---
+
+# Project README.md Content and Structure Guidelines
+
+This rule provides guidance for maintaining and updating the [README.md](mdc:README.md) file, which serves as the primary documentation for the MCP Server Manager.
+
+- Follow these guidelines when updating README.md
+- Follow these guidelines to update README.md when major code changes that are DIRECTLY releated to the current documentation have made it out of date or innacurate.
+
+## ONLY FOR THE README.md IN THE PROJECT ROOT!
+**IMPORTANT**: THESE GUIDELINES ONLY APPLY TO THE PROJECT README LOCATED AT THE PATH "{projectRoot}/README.md". IT DOES NOT APPLY TO OTHER FILES NAMED README.nd ELSEWHERE.
+
+## Core Purpose and Priorities
+
+The README focuses exclusively on helping users understand and work with MCP servers through this manager. It should:
+
+1. Prioritize practical guidance for configuring and managing MCP servers
+2. Explain concepts in a user-centric way, avoiding implementation details
+3. Maintain clear section organization that follows a logical workflow
+4. Present instructions as step-by-step processes where appropriate
+
+## Required Sections (in this order)
+
+1. **Project Overview**
+   - Brief description of purpose (simplifying MCP server management)
+   - Getting started guide
+     - Server config goes in servers/
+     - Reference the server template file in [mcp-atlassian.env.example](mdc:examples/mcp-atlassian.env.example) and [mcp-atlassian.ts.example](mdc:examples/mcp-atlassian.ts.example)
+     - Reference the optional but suggested option of the user forking this codebase and configuring their servers in it.
+     - Reference the optional choice of adding "src/mod.ts" aliased on their local PATH so they can access the CLI on their machine while working on other projects in the terminal to manage MCP servers. Alternatively they can create a Cursor rule in their projects that can manage the CLI and be provided the path to "src/mod.ts" so that an agent in any project can start and stop servers on its own.
+   - Explanation of what an MCP server is and why it matters
+
+2. **Main Workflow**
+   - Adding a new MCP server (step-by-step)
+   - Editing existing servers (simplified process)
+   - Removing servers (simplified process)
+
+3. **General Workflows (CLI Commands)**
+   - Starting MCP servers
+   - Stopping MCP servers
+   - Checking MCP status
+   - Health checks for MCP servers
+   - Updating MCP server images
+   - Reference that both deno tasks and directly calling "src/mod.ts" from a terminal both work.
+   - ...and any other commands related to MCP servers exposed [cli.ts](mdc:src/cli.ts)
+   - NOTE: Instructions should include examples with both all-servers and single-server approaches
+
+4. **Types of MCP Servers**
+   - HTTP/SSE servers explanation (how they work in this codebase and in Cursor)
+   - STDIO servers explanation (how they work in this codebase and in Cursor)
+   - Clear distinction between the two types' behaviors
+
+5. **High-Level Architecture**
+   - Focus on components users interact with (config files, env files)
+   - Brief overview of core source files without implementation details
+   - Explain the configuration-driven approach
+
+6. **Troubleshooting**
+   - Logging information
+   - Docker debugging tips
+   - Environment file verification
+   - Cursor configuration verification
+
+## What to Exclude
+
+- Development setup instructions (tests, formatting, etc.)
+- API documentation or technical implementation details
+- Badges and repository status indicators
+- Licensing information
+- Contributing guidelines
+- Changelog
+- Service-specific details that aren't relevant to the MCP manager itself
+
+## Style Guidelines
+
+- Use second-person ("you") to directly address the reader
+- Organize content in logical, progressive order from basic to advanced
+- Include code examples for CLI commands and configuration snippets
+- Use bullet points and numbered lists for clarity
+- Include callouts (e.g., GitHub-flavored Markdown callouts) for important tips
+- Link between sections where appropriate
+
+## Maintenance Instructions
+
+When updating:
+1. Maintain the established section order
+2. Ensure all required sections remain present
+3. Update examples if CLI syntax or configuration formats change
+4. Add new MCP server types if introduced
+5. Keep troubleshooting information current and comprehensive
+
+Following these guidelines will ensure major changes to the code are reflected appropriately, consistently, and accurately in the project root's README.md, while maintaining a clean and concise README.md that spares unecessary information that would prevent a user from quickly getting started.

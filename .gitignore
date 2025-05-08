@@ -1,0 +1,7 @@
+data/
+.DS_Store
+.env
+servers/*.ts
+servers/config/*.env
+context/*
+!context/README.md

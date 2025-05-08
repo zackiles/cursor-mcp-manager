@@ -1,0 +1,70 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Context for MCP Tool Calls
+Before making tool calls with MCP first review the files in the `context/` folder which provides context on who I am, my team, my department, and my company. It will provide valuable details in order to craft your tool calls with the right arguments.
+
+## Examples of Context
+All of these things could potentially be in a file in the `context/` folder.
+
+- Names of colleagues
+- Emails of colleagues
+- Jira
+  - Boards
+  - Tickets
+  - Project Keys
+  - Terms to search within tickets
+    - Names or emails or usernames or user IDs of colleagues
+    - Names of teams
+    - Names of projects
+    - ...
+- Confluence
+  - Spaces
+  - Page IDs
+  - Terms to search within pages
+    - Names or emails or usernames or user IDs of colleagues
+    - Names of teams
+    - Names of projects
+    - ...
+- Google Drives
+  - Folder names
+  - File names
+  - Terms to search within files
+    - Names or emails or usernames or user IDs of colleagues
+    - Names of teams
+    - Names of projects
+    - ...
+- Github
+  - Org names
+  - Repositories
+  - Usernames
+  - Groups
+- Applications, Services, and Systems
+  - Names of these typically map 1:1 for repositories on Github under the company's github Org name e.g `https://github.com/{Github Org Name}/some-service-name`
+- Slack
+  - Channel IDs
+  - Usernames
+  - Groups
+  - Colleagues to check DMs with
+
+## Examples of User Queries That Benefit From Context
+
+### Finding Jira Tickets
+
+USER QUERY: `List all Jira tickets for my teams which are blocked and have been updated in the last month.`
+
+SEARCH `context/` FOR:
+- Their team's Project Keys
+
+CONTEXT FOUND:
+ - Project Keys: PROJA, PROJB, PROJC
+
+MCP TOOL CALL WITH CONTEXT:
+```
+{
+  "jql": "status = \"Blocked / On hold\" AND updated >= -30d AND (project IN (PROJA, PROJB, PROJC)) ORDER BY updated DESC",
+  "limit": 50
+}
+```

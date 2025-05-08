@@ -1,0 +1,39 @@
+/**
+ * Template MCP STDIO server configuration
+ *
+ * Use this as a starting point for adding new MCP STDIO servers.
+ * Make a copy of this file and rename it to match your server name.
+ * For example: mcp-myservice.config.ts
+ */
+import type { McpServerConfig } from '../src/types.ts'
+
+const stdioServerConfig: McpServerConfig = {
+  name: 'mcp-myservice-stdio', // Unique identifier for the server
+  description: 'MCP MyService (STDIO)', // Human-readable name
+  type: 'stdio', // Server type: 'stdio'
+  image: 'ghcr.io/myorg/myimage:latest', // Docker image to use
+  args: [], // No additional args needed for STDIO servers
+           // The orchestrator will add the necessary Docker args
+
+  // Standard health validator configuration
+  healthValidator: {
+    method: 'mcp/tools/list', // MCP method to call
+    params: {}, // Parameters for the method
+    responseContains: 'tools', // Optional string that must be in the response
+    timeoutMs: 10000 // Timeout in milliseconds
+  },
+
+  // Instructions to show after starting - include test examples here
+  postStartInstructions: `
+NOTE: The MyService STDIO MCP server is designed to run in interactive mode.
+Cursor will run the server as needed, so no persistent container is needed.
+You can now use MyService tools in Cursor.
+
+Make sure your credentials are properly configured in your .env file.
+
+Try using this command to test the server:
+Test this STDIO MCP server by doing XYZ
+`,
+}
+
+export default stdioServerConfig

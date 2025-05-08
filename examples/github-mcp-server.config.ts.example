@@ -1,0 +1,40 @@
+/**
+ * GitHub MCP Server Configuration Example
+ *
+ * This is an example configuration for the GitHub MCP server.
+ * Copy this file to servers/ and customize it for your specific needs.
+ */
+import type { McpServerConfig } from '../src/types.ts'
+
+const serverConfig: McpServerConfig = {
+  name: 'github-mcp-server',
+  description: 'GitHub MCP Server (STDIO)',
+  type: 'stdio',
+  image: 'ghcr.io/github/github-mcp-server',
+  args: [], // No specific args needed for GitHub MCP server
+
+  // Optional health validator to check server connectivity
+  healthValidator: {
+    method: 'mcp/tool/run', // Generic tool runner
+    params: {
+      toolName: 'get_me', // Retrieve authenticated user details
+      parameters: {}
+    },
+    responseContains: 'login', // Expect a login in the response
+    timeoutMs: 10000, // 10-second timeout
+  },
+
+  // Instructions shown after server start
+  postStartInstructions: `
+NOTE: The GitHub MCP server is designed to run in interactive mode via Docker.
+Cursor will run the server as needed, so no persistent container is needed.
+Ensure your GITHUB_PERSONAL_ACCESS_TOKEN is set in servers/config/github-mcp-server.env
+
+You can use GitHub tools in Cursor.
+Try using the command: @github get my user details
+
+Refer to docs/github-mcp-install-guide.md for more details.
+`,
+}
+
+export default serverConfig

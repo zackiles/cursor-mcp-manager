@@ -1,0 +1,47 @@
+/**
+ * Template MCP SSE server configuration
+ *
+ * Use this as a starting point for adding new MCP SSE servers.
+ * Make a copy of this file and rename it to match your server name.
+ * For example: mcp-myservice.config.ts
+ */
+import type { McpServerConfig } from '../src/types.ts'
+
+const sseServerConfig: McpServerConfig = {
+  name: 'mcp-myservice-sse', // Unique identifier for the server
+  description: 'MCP MyService (SSE)', // Human-readable name
+  type: 'http', // Server type: 'http' for SSE
+  image: 'ghcr.io/myorg/myimage:latest', // Docker image to use
+  args: [ // Command-line arguments for the server
+    '--transport',
+    'sse',
+    // Port configuration is optional - if not specified, an available port will be assigned automatically
+    // '--port',
+    // '9001',
+    '-vv',
+  ],
+
+  // Standard health validator configuration
+  healthValidator: {
+    method: 'mcp/tools/list', // MCP method to call
+    params: {}, // Parameters for the method
+    responseContains: 'tools', // Optional string that must be in the response
+    timeoutMs: 5000 // Timeout in milliseconds
+  },
+
+  // Instructions to show after starting - include test examples here
+  postStartInstructions: `
+MyService SSE MCP server is now running!
+You can now use the following tools in Cursor.
+Make sure your credentials are properly configured in your .env file.
+
+Try using this command to test the server:
+Test this SSE MCP server by doing XYZ
+
+Available tools:
+- tool_one: does something
+- tool_two: does something else
+`,
+}
+
+export default sseServerConfig

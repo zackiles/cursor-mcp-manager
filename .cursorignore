@@ -1,0 +1,9 @@
+# Let cursor access data that was ignored in .gitignore
+!data
+!context/*
+
+# Explicitly allow all files in context directory
+!deno.jsonc
+
+# MCP Protocol. We don't want it index, but will allow it to be used by the agent when manually requested by keeping in in .cursorignore but disabling in .cursorindexignore
+!vendor/mcp-specification.ts

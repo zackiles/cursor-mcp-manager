@@ -1,0 +1,57 @@
+---
+description:
+globs: src/commands/mcp.ts
+alwaysApply: false
+---
+# MCP Command Help Synchronization
+
+When making changes to the MCP command file [src/commands/mcp.ts](mdc:src/commands/mcp.ts), you must always check and update the corresponding help documentation in [src/commands/help.ts](mdc:src/commands/help.ts).
+
+## Required Help Menu Updates
+
+The help documentation for the MCP command must be updated when any of the following changes occur:
+
+1. **Flag/Option Changes**: If flags or options are added, removed, or modified (including their aliases), the help menu must reflect these changes
+2. **Command Behavior**: If the command's behavior changes in a way that affects how users interact with it
+3. **Output Format**: If the output format or content that users see is modified
+4. **Server Configuration**: If available server types or server-specific features are added or changed
+
+## Implementation Details
+
+The MCP help documentation is located in the `help.ts` file in the `command` function. A specific section handles MCP-specific help output:
+
+```typescript
+// Command-specific help
+if (targetCommand === 'mcp') {
+  logger.print(`${config.PACKAGE_NAME} - MCP Server Management
+
+Usage:
+  ${config.PROJECT_NAME} mcp [options]
+
+Options:
+  --stop, -s          Stop running MCP servers
+  --status, -t        Show status of MCP servers
+  --health-check, -c  Perform health check on running MCP servers
+  --server=NAME, -n   Target a specific MCP server by name
+
+Examples:
+  ${config.PROJECT_NAME} mcp               # Start all MCP servers
+  ${config.PROJECT_NAME} mcp --stop        # Stop all MCP servers
+  ${config.PROJECT_NAME} mcp --status      # Check status of all MCP servers
+  ${config.PROJECT_NAME} mcp --server=mcp-atlassian  # Start only the Atlassian MCP server`)
+  return
+}
+```
+
+This section must be kept in sync with the actual implementation of the MCP command, particularly with the `options` object in the `commandRouteDefinition`.
+
+## Synchronization Process
+
+When modifying the MCP command:
+
+1. First make the necessary changes to `mcp.ts`
+2. Then check `help.ts` and update the MCP-specific help section
+3. Ensure that all options, aliases, examples, and descriptions accurately reflect the current implementation
+4. Verify that example commands will work as shown
+
+Keeping documentation synchronized is crucial for maintaining a good user experience with the CLI.
