@@ -49,6 +49,9 @@ async function command(
   // Sync state with current configuration
   currentState = syncStateWithConfig(currentState, serverConfigs)
 
+  // Save the synced state to ensure all servers are persisted
+  await saveState(currentState)
+
   const targetServer = args.server as string | undefined
 
   // Validate the server selection if a specific one is requested
@@ -87,6 +90,14 @@ async function command(
     // Start the server (default action)
     logger.info(`Starting server ${server.name}...`)
     const success = await startServer(server)
+
+    // Reload state to capture any changes made during server start
+    // (e.g., user preferences saved by the orchestrator)
+    currentState = await loadState()
+
+    // Re-sync with configurations to ensure all servers are present
+    currentState = syncStateWithConfig(currentState, serverConfigs)
+
     // Update state based on start result
     if (success) {
       currentState = updateServerStatus(currentState, server.name, true)

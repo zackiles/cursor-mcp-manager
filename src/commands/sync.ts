@@ -5,7 +5,11 @@ import type {
 import logger from '../utils/logger.ts'
 import { getMcpServerConfigs } from '../config.ts'
 import { isServerRunning } from '../orchestrator.ts'
-import { loadState, saveState, syncStateWithConfig } from '../state.ts'
+import {
+  loadState,
+  saveState,
+  syncStateWithConfig,
+} from '../state.ts'
 import { validateServerSelection } from '../utils/server-validator.ts'
 
 const commandRouteDefinition: CommandRouteDefinition = {

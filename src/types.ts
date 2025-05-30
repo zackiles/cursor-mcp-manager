@@ -93,6 +93,7 @@ interface McpState {
   endpoint: string
   envFile?: string
   online: boolean
+  manageCursorConfig?: boolean
 }
 
 /**

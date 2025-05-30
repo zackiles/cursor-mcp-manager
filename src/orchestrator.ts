@@ -43,6 +43,7 @@ import {
   loadState,
   saveState,
   updateServerStatus,
+  updateServerCursorConfigPreference,
 } from './state.ts'
 import { join } from '@std/path'
 import { getAvailablePort } from '@std/net'
@@ -530,9 +531,8 @@ async function stopServer(server: McpServerConfig): Promise<boolean> {
     // Update the state file to mark server as offline
     await updateAndSaveServerState(name, false)
 
-    // Also update Cursor config to reflect the new server state
-    // This ensures Cursor knows the server is now offline
-    await updateCursorConfigForServer(server, true)
+    // Note: Cursor config update is now handled in the stop command
+    // based on user preferences, not forced here
 
     logger.info(`${name} stopped successfully.`)
     return true
@@ -699,6 +699,28 @@ async function updateCursorConfigForServer(
       return true
     }
 
+    // Load current state to check user's previous choice
+    const currentState = await loadState()
+    const serverState = getServerState(currentState, server.name)
+
+    // Determine if we should update based on forceUpdate and previous preferences
+    let shouldUpdateWithoutPrompt = forceUpdate
+
+    // If user has already made a choice for this server, respect it
+    if (!forceUpdate && serverState?.manageCursorConfig !== undefined) {
+      if (!serverState.manageCursorConfig) {
+        logger.debug(
+          `User previously chose not to manage Cursor config for ${server.name}, skipping update`,
+        )
+        return true
+      }
+      // User previously said yes, so proceed with update without prompting
+      logger.debug(
+        `User previously chose to manage Cursor config for ${server.name}, updating without prompting`,
+      )
+      shouldUpdateWithoutPrompt = true
+    }
+
     // Transform server config for Cursor
     const transformedConfig = await transformServerConfigForCursor(server)
 
@@ -729,12 +751,26 @@ async function updateCursorConfigForServer(
     }
 
     // If not forcing update, prompt the user for confirmation
-    let shouldUpdate = forceUpdate
-    if (!forceUpdate) {
+    let shouldUpdate = shouldUpdateWithoutPrompt
+    if (!shouldUpdateWithoutPrompt) {
       const action = serverInConfig ? 'update' : 'add'
       shouldUpdate = await confirm(
         `Would you like to automatically ${action} ${server.description} (${server.name}) in your Cursor MCP config at ${mcpConfigPath}?`,
       )
+
+      // Save the user's choice to state for future reference
+      const updatedState = updateServerCursorConfigPreference(
+        currentState,
+        server.name,
+        shouldUpdate,
+      )
+      await saveState(updatedState)
+
+      if (shouldUpdate) {
+        logger.debug(`Saved user preference: will manage Cursor config for ${server.name}`)
+      } else {
+        logger.debug(`Saved user preference: will NOT manage Cursor config for ${server.name}`)
+      }
     }
 
     if (shouldUpdate) {

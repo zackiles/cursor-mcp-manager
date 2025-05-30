@@ -120,6 +120,8 @@ function syncStateWithConfig(
       endpoint,
       envFile: getEnvFilePath(server.name),
       online: existingEntry?.online || false,
+      // Preserve the user's cursor config management preference
+      manageCursorConfig: existingEntry?.manageCursorConfig,
     }
 
     newState.mcps.push(serverState)
@@ -152,6 +154,8 @@ function updateServerStatus(
           online: isOnline,
           // Only update endpoint if provided, otherwise keep existing
           ...(endpoint ? { endpoint } : {}),
+          // Preserve the manageCursorConfig property
+          manageCursorConfig: mcp.manageCursorConfig,
         }
         return updatedServer
       }
@@ -199,6 +203,52 @@ function addOrUpdateServerState(
   }
 }
 
+/**
+ * Update server's cursor config management preference
+ * @param state Current state file
+ * @param serverName Name of the server to update
+ * @param manageCursorConfig Whether user wants us to manage cursor config for this server
+ * @returns Updated state file
+ */
+function updateServerCursorConfigPreference(
+  state: McpStateFile,
+  serverName: string,
+  manageCursorConfig: boolean,
+): McpStateFile {
+  // Check if server exists
+  const existingIndex = state.mcps.findIndex((mcp) => mcp.name === serverName)
+
+  if (existingIndex >= 0) {
+    // Server exists, update it
+    return {
+      ...state,
+      mcps: state.mcps.map((mcp) => {
+        if (mcp.name === serverName) {
+          return {
+            ...mcp,
+            manageCursorConfig,
+          }
+        }
+        return mcp
+      }),
+    }
+  }
+
+  // Server doesn't exist, create a minimal entry
+  const newServer: McpState = {
+    name: serverName,
+    endpoint: '',
+    envFile: getEnvFilePath(serverName),
+    online: false,
+    manageCursorConfig,
+  }
+
+  return {
+    ...state,
+    mcps: [...state.mcps, newServer],
+  }
+}
+
 export {
   addOrUpdateServerState,
   getServerState,
@@ -206,4 +256,5 @@ export {
   saveState,
   syncStateWithConfig,
   updateServerStatus,
+  updateServerCursorConfigPreference,
 }
