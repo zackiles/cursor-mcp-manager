@@ -20,6 +20,7 @@ import { exists } from '@std/fs'
 import { join } from '@std/path'
 import type { AppConfig, McpServerConfig } from './types.ts'
 import logger from './utils/logger.ts'
+import { getPlatformClients } from './utils/find-mcp-clients.ts'
 
 /**
  * Represents a possible configuration value which can be:
@@ -27,7 +28,10 @@ import logger from './utils/logger.ts'
  * - A function that returns a string or Promise<string>
  * - A Promise that resolves to a string
  */
-type KeyValueConfig = string | (() => string | Promise<string>) | Promise<string>
+type KeyValueConfig =
+  | string
+  | (() => string | Promise<string>)
+  | Promise<string>
 
 /**
  * Represents an object of configuration key-value pairs
@@ -40,10 +44,19 @@ const DEFAULT_VALUES: ConfigRecord = {
   PACKAGE_NAME: '@my-org/my-project',
   PACKAGE_PATH: () => getWorkspacePath(),
   CURSOR_MCP_CONFIG_PATH: () => {
-    const homeDir = Deno.env.get('HOME')
-    const userProfile = Deno.env.get('USERPROFILE')
-    const baseDir = homeDir ?? userProfile ?? '/tmp' // Fallback to /tmp if neither is set
-    return join(baseDir, '.cursor', 'mcp.json')
+    const clients = getPlatformClients()
+    const cursorClient = clients.find(client => client.name === 'Cursor')
+    return cursorClient?.path || ''
+  },
+  WINDSURF_MCP_CONFIG_PATH: () => {
+    const clients = getPlatformClients()
+    const windsurfClient = clients.find(client => client.name === 'Windsurf')
+    return windsurfClient?.path || ''
+  },
+  CLAUDE_MCP_CONFIG_PATH: () => {
+    const clients = getPlatformClients()
+    const claudeClient = clients.find(client => client.name === 'Claude')
+    return claudeClient?.path || ''
   },
 }
 
@@ -216,7 +229,9 @@ async function initializeConfigInternal(
   const envConfig: Record<string, string> = {}
 
   // Helper function to load and filter env files
-  const loadAndFilterEnv = async (path: string): Promise<Record<string, string>> => {
+  const loadAndFilterEnv = async (
+    path: string,
+  ): Promise<Record<string, string>> => {
     try {
       if (await exists(path)) {
         logger.debug(`Loading environment from ${path}`)
@@ -307,7 +322,9 @@ async function getMcpServerConfigs(): Promise<McpServerConfig[]> {
 /**
  * Returns a specific MCP server configuration by name
  */
-async function getMcpServerConfig(name: string): Promise<McpServerConfig | undefined> {
+async function getMcpServerConfig(
+  name: string,
+): Promise<McpServerConfig | undefined> {
   const configs = await getMcpServerConfigs()
   return configs.find((config) => config.name === name)
 }
@@ -383,7 +400,8 @@ async function loadServerConfigs(): Promise<McpServerConfig[]> {
 
     // If after checking all files, no valid configurations were loaded
     if (configs.length === 0) {
-      const noConfigsMsg = `No valid server configurations found in ${serversDir}`
+      const noConfigsMsg =
+        `No valid server configurations found in ${serversDir}`
       logger.error(noConfigsMsg)
       // It's important to throw here if the expectation is that at least one config should exist
       // or if downstream code doesn't gracefully handle an empty config array from this function.
@@ -399,7 +417,9 @@ async function loadServerConfigs(): Promise<McpServerConfig[]> {
     return filteredConfigs
   } catch (err: unknown) {
     const errorMessage = err instanceof Error ? err.message : String(err)
-    logger.error(`Error reading server configurations directory ${serversDir}: ${errorMessage}`)
+    logger.error(
+      `Error reading server configurations directory ${serversDir}: ${errorMessage}`,
+    )
     throw new Error(`Failed to load server configurations: ${errorMessage}`)
   }
 }
@@ -410,7 +430,9 @@ async function loadServerConfigs(): Promise<McpServerConfig[]> {
  * @param configs All loaded server configurations
  * @returns Filtered server configurations based on ENABLED_SERVERS, or all if not specified
  */
-async function filterEnabledServers(configs: McpServerConfig[]): Promise<McpServerConfig[]> {
+async function filterEnabledServers(
+  configs: McpServerConfig[],
+): Promise<McpServerConfig[]> {
   try {
     // Check if we have a main.env file with ENABLED_SERVERS
     if (await exists(mainEnvPath)) {
@@ -425,9 +447,15 @@ async function filterEnabledServers(configs: McpServerConfig[]): Promise<McpServ
           .filter((server) => server.length > 0)
 
         if (enabledServers.length > 0) {
-          logger.info(`Filtering servers based on ENABLED_SERVERS: ${enabledServers.join(', ')}`)
+          logger.info(
+            `Filtering servers based on ENABLED_SERVERS: ${
+              enabledServers.join(', ')
+            }`,
+          )
 
-          const filteredConfigs = configs.filter((config) => enabledServers.includes(config.name))
+          const filteredConfigs = configs.filter((config) =>
+            enabledServers.includes(config.name)
+          )
 
           // Log any servers that were filtered out
           const filteredOut = configs
@@ -435,7 +463,9 @@ async function filterEnabledServers(configs: McpServerConfig[]): Promise<McpServ
             .filter((name) => !enabledServers.includes(name))
 
           if (filteredOut.length > 0) {
-            logger.info(`The following servers are disabled: ${filteredOut.join(', ')}`)
+            logger.info(
+              `The following servers are disabled: ${filteredOut.join(', ')}`,
+            )
           }
 
           return filteredConfigs
@@ -444,10 +474,14 @@ async function filterEnabledServers(configs: McpServerConfig[]): Promise<McpServ
     }
 
     // If ENABLED_SERVERS not specified, or it's empty, return all servers
-    logger.debug('No ENABLED_SERVERS filter specified - all servers are enabled')
+    logger.debug(
+      'No ENABLED_SERVERS filter specified - all servers are enabled',
+    )
     return configs
   } catch (err) {
-    logger.warn(`Error filtering enabled servers: ${err}. Using all available servers.`)
+    logger.warn(
+      `Error filtering enabled servers: ${err}. Using all available servers.`,
+    )
     return configs
   }
 }

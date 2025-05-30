@@ -1,5 +1,5 @@
 {
-  // Schema deno.jsonc: @https://github.com/denoland/deno/blob/main/cli/schemas/config-file.v1.json
+  "$schema": "https://raw.githubusercontent.com/denoland/deno/refs/heads/main/cli/schemas/config-file.v1.json",
   "name": "@zackiles/cursor-mcp-manager",
   "version": "0.0.1",
   "description": "An MCP workspace manager for Cursor. Easily install, configure, start, stop, and update MCP servers centrally for your cursor workspace.",
@@ -55,17 +55,17 @@
   "lock": true,
   "nodeModulesDir": "none",
   "fmt": {
-    "lineWidth": 100,
+    "lineWidth": 80,
     "semiColons": false,
     "useTabs": false,
     "indentWidth": 2,
     "singleQuote": true,
     "proseWrap": "preserve",
     "include": [
-      "src/**",
-      "scripts/**",
-      "test/**",
-      "examples/**",
+      "src/**/*.ts",
+      "scripts/**/*.ts",
+      "test/**/*.ts",
+      "examples/**/**",
       "README.md",
       "CONTRIBUTING.md",
       "CHANGELOG.md"

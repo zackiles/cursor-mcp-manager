@@ -17,7 +17,9 @@ import type { CursorMcpEntry } from '../types.ts'
  * @param configPath Path to the Cursor MCP configuration file
  * @returns Object representing the parsed configuration, or an empty object if file doesn't exist
  */
-async function readMcpConfigFile(configPath: string): Promise<Record<string, unknown>> {
+async function readMcpConfigFile(
+  configPath: string,
+): Promise<Record<string, unknown>> {
   try {
     if (!await exists(configPath)) {
       logger.debug(`Cursor MCP config file not found: ${configPath}`)
@@ -31,7 +33,9 @@ async function readMcpConfigFile(configPath: string): Promise<Record<string, unk
       return jsonContent
     } catch (parseError) {
       logger.warn(
-        `Could not parse Cursor MCP config file as JSON: ${(parseError as Error).message}`,
+        `Could not parse Cursor MCP config file as JSON: ${
+          (parseError as Error).message
+        }`,
       )
       return {}
     }
@@ -74,7 +78,9 @@ async function writeMcpConfigFile(
     logger.debug(`Successfully wrote Cursor MCP config file: ${configPath}`)
     return true
   } catch (error) {
-    logger.error(`Failed to write Cursor MCP config file: ${(error as Error).message}`)
+    logger.error(
+      `Failed to write Cursor MCP config file: ${(error as Error).message}`,
+    )
     return false
   }
 }
@@ -85,13 +91,19 @@ async function writeMcpConfigFile(
  * @param configPath Path to the Cursor MCP configuration file
  * @returns Record of server configurations (empty if no file or servers found)
  */
-async function getMcpServers(configPath: string): Promise<Record<string, CursorMcpEntry>> {
+async function getMcpServers(
+  configPath: string,
+): Promise<Record<string, CursorMcpEntry>> {
   try {
     const config = await readMcpConfigFile(configPath)
     const mcpServers = config.mcpServers as Record<string, CursorMcpEntry> || {}
     return mcpServers
   } catch (error) {
-    logger.warn(`Error getting MCP servers from Cursor config: ${(error as Error).message}`)
+    logger.warn(
+      `Error getting MCP servers from Cursor config: ${
+        (error as Error).message
+      }`,
+    )
     return {}
   }
 }
@@ -118,14 +130,19 @@ async function addMcpServers(
 
     // Add each server
     for (const [name, serverConfig] of Object.entries(servers)) {
-      ;(config.mcpServers as Record<string, CursorMcpEntry>)[name] = serverConfig
+      ;(config.mcpServers as Record<string, CursorMcpEntry>)[name] =
+        serverConfig
       logger.debug(`Added/updated server ${name} in Cursor MCP config`)
     }
 
     // Write updated config
     return await writeMcpConfigFile(configPath, config)
   } catch (error) {
-    logger.error(`Error adding MCP servers to Cursor config file: ${(error as Error).message}`)
+    logger.error(
+      `Error adding MCP servers to Cursor config file: ${
+        (error as Error).message
+      }`,
+    )
     return false
   }
 }
@@ -144,7 +161,9 @@ async function removeMcpServers(
   try {
     // Check if config file exists
     if (!await exists(configPath)) {
-      logger.warn(`Cursor MCP config file not found: ${configPath}, nothing to remove`)
+      logger.warn(
+        `Cursor MCP config file not found: ${configPath}, nothing to remove`,
+      )
       return true // Return true as there's nothing to remove
     }
 
@@ -174,10 +193,20 @@ async function removeMcpServers(
 
     return true // Nothing was removed, but that's not an error
   } catch (error) {
-    logger.warn(`Error removing MCP servers from Cursor config file: ${(error as Error).message}`)
+    logger.warn(
+      `Error removing MCP servers from Cursor config file: ${
+        (error as Error).message
+      }`,
+    )
     // Log a warning but return true as specified in the requirements (no errors thrown)
     return true
   }
 }
 
-export { addMcpServers, getMcpServers, readMcpConfigFile, removeMcpServers, writeMcpConfigFile }
+export {
+  addMcpServers,
+  getMcpServers,
+  readMcpConfigFile,
+  removeMcpServers,
+  writeMcpConfigFile,
+}

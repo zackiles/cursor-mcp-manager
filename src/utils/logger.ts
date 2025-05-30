@@ -37,7 +37,8 @@ function maskSensitiveValue(value: string): string {
 
   // For very short values, show at least some characters
   if (value.length <= 8) {
-    return value.substring(0, 2) + '*'.repeat(value.length - 3) + value.substring(value.length - 1)
+    return value.substring(0, 2) + '*'.repeat(value.length - 3) +
+      value.substring(value.length - 1)
   }
 
   // For longer values, show first 4 and last 4
@@ -83,12 +84,16 @@ function maskSensitiveData(
   additionalPatterns: string[] = [],
 ): Record<string, unknown> {
   const result: Record<string, unknown> = {}
-  const sensitivePatterns = [...DEFAULT_SENSITIVE_PATTERNS, ...additionalPatterns]
+  const sensitivePatterns = [
+    ...DEFAULT_SENSITIVE_PATTERNS,
+    ...additionalPatterns,
+  ]
 
   for (const [key, value] of Object.entries(data)) {
     // If serverFilter is provided, only include variables that might be related to that server
     if (serverFilter) {
-      const normalizedServerName = serverFilter.replace('mcp-', '').toUpperCase()
+      const normalizedServerName = serverFilter.replace('mcp-', '')
+        .toUpperCase()
       // Skip variables not matching the server filter
       if (!key.toUpperCase().includes(normalizedServerName)) {
         continue
@@ -97,11 +102,15 @@ function maskSensitiveData(
 
     // Check if the variable might contain sensitive information
     const upperKey = key.toUpperCase()
-    const isSensitive = sensitivePatterns.some((pattern) => upperKey.includes(pattern))
+    const isSensitive = sensitivePatterns.some((pattern) =>
+      upperKey.includes(pattern)
+    )
 
     if (isSensitive && typeof value === 'string') {
       result[key] = maskSensitiveValue(value)
-    } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+    } else if (
+      typeof value === 'object' && value !== null && !Array.isArray(value)
+    ) {
       // Recursively mask nested objects
       result[key] = maskSensitiveData(
         value as Record<string, unknown>,
@@ -133,11 +142,17 @@ const logger = {
 
   debug: (msg: string, ...args: unknown[]) =>
     shouldLog('debug') &&
-    console.debug(`${bold(dim(`${LOG_PREFIX}`))} ${dim(msg)}`, ...processArgs(args)),
+    console.debug(
+      `${bold(dim(`${LOG_PREFIX}`))} ${dim(msg)}`,
+      ...processArgs(args),
+    ),
 
   warn: (msg: string, ...args: unknown[]) =>
     shouldLog('warn') &&
-    console.warn(`${bold(yellow(`${LOG_PREFIX}`))} ${msg}`, ...processArgs(args)),
+    console.warn(
+      `${bold(yellow(`${LOG_PREFIX}`))} ${msg}`,
+      ...processArgs(args),
+    ),
 
   /**
    * Print masked environment variables for a server

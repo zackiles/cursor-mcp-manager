@@ -1,6 +1,9 @@
 import type { ParseOptions } from '@std/cli'
 import { dedent } from '@qnighy/dedent'
-import type { CommandRouteDefinition, CommandRouteOptions } from '../utils/command-router.ts'
+import type {
+  CommandRouteDefinition,
+  CommandRouteOptions,
+} from '../utils/command-router.ts'
 import logger from '../utils/logger.ts'
 import { getAppConfig } from '../config.ts'
 

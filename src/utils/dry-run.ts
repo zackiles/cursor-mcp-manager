@@ -31,13 +31,17 @@ function printColorHeader(text: string, colorFn: (s: string) => string) {
  * @param servers Array of server configurations to add/update
  * @returns True if successful, false if failed
  */
-export async function dryRunAddServers(servers: McpServerConfig[]): Promise<boolean> {
+export async function dryRunAddServers(
+  servers: McpServerConfig[],
+): Promise<boolean> {
   try {
     const appConfig = await getAppConfig()
     const mcpConfigPath = appConfig.CURSOR_MCP_CONFIG_PATH
 
     if (!mcpConfigPath) {
-      logger.error('Cursor MCP config file path not configured, cannot perform dry run')
+      logger.error(
+        'Cursor MCP config file path not configured, cannot perform dry run',
+      )
       return false
     }
 
@@ -58,7 +62,10 @@ export async function dryRunAddServers(servers: McpServerConfig[]): Promise<bool
       const transformedConfig = await transformServerConfigForCursor(server)
 
       // Add it to the future config's mcpServers property
-      const mcpServers = futureFullConfig.mcpServers as Record<string, CursorMcpEntry>
+      const mcpServers = futureFullConfig.mcpServers as Record<
+        string,
+        CursorMcpEntry
+      >
       mcpServers[server.name] = transformedConfig
     }
 
@@ -68,11 +75,17 @@ export async function dryRunAddServers(servers: McpServerConfig[]): Promise<bool
     printColorHeader('Current Complete Cursor MCP Config File:', blue)
     logger.log('', currentFullConfig)
 
-    printColorHeader('Future Complete Cursor MCP Config File (after start):', green)
+    printColorHeader(
+      'Future Complete Cursor MCP Config File (after start):',
+      green,
+    )
     logger.log('', futureFullConfig)
 
     const serverNames = servers.map((s) => bold(yellow(s.name))).join(', ')
-    printColorHeader(`===== DRY RUN: NO CHANGES MADE [Servers: ${serverNames}] =====`, cyan)
+    printColorHeader(
+      `===== DRY RUN: NO CHANGES MADE [Servers: ${serverNames}] =====`,
+      cyan,
+    )
 
     return true
   } catch (error) {
@@ -87,13 +100,17 @@ export async function dryRunAddServers(servers: McpServerConfig[]): Promise<bool
  * @param servers Array of server configurations to remove
  * @returns True if successful, false if failed
  */
-export async function dryRunRemoveServers(servers: McpServerConfig[]): Promise<boolean> {
+export async function dryRunRemoveServers(
+  servers: McpServerConfig[],
+): Promise<boolean> {
   try {
     const appConfig = await getAppConfig()
     const mcpConfigPath = appConfig.CURSOR_MCP_CONFIG_PATH
 
     if (!mcpConfigPath) {
-      logger.error('Cursor MCP config file path not configured, cannot perform dry run')
+      logger.error(
+        'Cursor MCP config file path not configured, cannot perform dry run',
+      )
       return false
     }
 
@@ -123,11 +140,17 @@ export async function dryRunRemoveServers(servers: McpServerConfig[]): Promise<b
     printColorHeader('Current Complete Cursor MCP Config File:', blue)
     logger.log('', currentFullConfig)
 
-    printColorHeader('Future Complete Cursor MCP Config File (after stop):', red)
+    printColorHeader(
+      'Future Complete Cursor MCP Config File (after stop):',
+      red,
+    )
     logger.log('', futureFullConfig)
 
     const serverNames = servers.map((s) => bold(yellow(s.name))).join(', ')
-    printColorHeader(`===== DRY RUN: NO CHANGES MADE [Servers: ${serverNames}] =====`, cyan)
+    printColorHeader(
+      `===== DRY RUN: NO CHANGES MADE [Servers: ${serverNames}] =====`,
+      cyan,
+    )
 
     return true
   } catch (error) {
@@ -139,13 +162,17 @@ export async function dryRunRemoveServers(servers: McpServerConfig[]): Promise<b
 /**
  * @deprecated Use dryRunAddServers instead
  */
-export async function dryRunAddServer(server: McpServerConfig): Promise<boolean> {
+export async function dryRunAddServer(
+  server: McpServerConfig,
+): Promise<boolean> {
   return dryRunAddServers([server])
 }
 
 /**
  * @deprecated Use dryRunRemoveServers instead
  */
-export async function dryRunRemoveServer(server: McpServerConfig): Promise<boolean> {
+export async function dryRunRemoveServer(
+  server: McpServerConfig,
+): Promise<boolean> {
   return dryRunRemoveServers([server])
 }

@@ -1,4 +1,7 @@
-import type { CommandRouteDefinition, CommandRouteOptions } from '../utils/command-router.ts'
+import type {
+  CommandRouteDefinition,
+  CommandRouteOptions,
+} from '../utils/command-router.ts'
 import logger from '../utils/logger.ts'
 import { getMcpServerConfigs } from '../config.ts'
 import { isServerRunning } from '../orchestrator.ts'
@@ -176,7 +179,9 @@ async function streamFormattedLogs(containerNames: string[]): Promise<void> {
   }
 }
 
-async function command({ args, routes: _ }: CommandRouteOptions): Promise<void> {
+async function command(
+  { args, routes: _ }: CommandRouteOptions,
+): Promise<void> {
   // Check if streaming mode is enabled
   const streamMode = args.stream === true
 
@@ -215,7 +220,9 @@ async function command({ args, routes: _ }: CommandRouteOptions): Promise<void> 
   for (const server of serversToProcess) {
     // Skip STDIO servers as they don't have persistent containers
     if (server.type === 'stdio') {
-      logger.info(`Skipping ${server.name} as STDIO servers don't have persistent logs`)
+      logger.info(
+        `Skipping ${server.name} as STDIO servers don't have persistent logs`,
+      )
       continue
     }
 
@@ -244,7 +251,9 @@ async function command({ args, routes: _ }: CommandRouteOptions): Promise<void> 
       await streamFormattedLogs([server.name])
     } else {
       // Multiple servers streaming
-      logger.info(`Streaming logs for ${runningServers.length} servers. Press Ctrl+C to exit.`)
+      logger.info(
+        `Streaming logs for ${runningServers.length} servers. Press Ctrl+C to exit.`,
+      )
 
       const serverNames = runningServers.map((server) => server.name)
       await streamFormattedLogs(serverNames)
@@ -253,9 +262,13 @@ async function command({ args, routes: _ }: CommandRouteOptions): Promise<void> 
     // Non-streaming mode: display last 100 lines with pretty formatting
     for (const server of runningServers) {
       console.log('\n')
-      console.log('╔═════════════════════════════════════════════════════════════════════════════')
+      console.log(
+        '╔═════════════════════════════════════════════════════════════════════════════',
+      )
       console.log(`║ Logs for ${server.name} (last 100 lines)`)
-      console.log('╚═════════════════════════════════════════════════════════════════════════════')
+      console.log(
+        '╚═════════════════════════════════════════════════════════════════════════════',
+      )
       console.log('')
 
       const command = new Deno.Command('docker', {

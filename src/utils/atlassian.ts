@@ -148,7 +148,9 @@ interface AtlassianApi {
 /**
  * Create an Atlassian API client
  */
-export async function createClient(options?: AtlassianClientOptions): Promise<AtlassianApi> {
+export async function createClient(
+  options?: AtlassianClientOptions,
+): Promise<AtlassianApi> {
   const config = await getAppConfig()
 
   let baseUrl = options?.baseUrl || config.ATLASSIAN_URL || ''
@@ -206,7 +208,9 @@ export async function createClient(options?: AtlassianClientOptions): Promise<At
   ): Promise<Response> {
     const url = `${baseUrl}${path}`
     const headers = {
-      Authorization: `Basic ${btoa(`${config.ATLASSIAN_EMAIL || ''}:${apiToken}`)}`,
+      Authorization: `Basic ${
+        btoa(`${config.ATLASSIAN_EMAIL || ''}:${apiToken}`)
+      }`,
       Accept: 'application/json',
       'Content-Type': 'application/json',
     }
@@ -225,14 +229,19 @@ export async function createClient(options?: AtlassianClientOptions): Promise<At
 
   // Implement the API interface
   return {
-    async searchConfluence(query: string, limit = 10): Promise<AtlassianApiResponse> {
+    async searchConfluence(
+      query: string,
+      limit = 10,
+    ): Promise<AtlassianApiResponse> {
       const path = `/wiki/rest/api/content/search?cql=${
         encodeURIComponent(query)
       }&limit=${limit}&expand=body.view`
       const response = await makeRequest(path)
 
       if (!response.ok) {
-        throw new Error(`Confluence search failed: ${response.status} ${response.statusText}`)
+        throw new Error(
+          `Confluence search failed: ${response.status} ${response.statusText}`,
+        )
       }
 
       return await response.json() as AtlassianApiResponse
@@ -243,7 +252,9 @@ export async function createClient(options?: AtlassianClientOptions): Promise<At
       const response = await makeRequest(path)
 
       if (!response.ok) {
-        throw new Error(`Failed to get Confluence page: ${response.status} ${response.statusText}`)
+        throw new Error(
+          `Failed to get Confluence page: ${response.status} ${response.statusText}`,
+        )
       }
 
       return await response.json()
@@ -254,13 +265,23 @@ export async function createClient(options?: AtlassianClientOptions): Promise<At
       const body = {
         jql,
         maxResults: limit,
-        fields: ['summary', 'description', 'issuetype', 'priority', 'status', 'created', 'updated'],
+        fields: [
+          'summary',
+          'description',
+          'issuetype',
+          'priority',
+          'status',
+          'created',
+          'updated',
+        ],
       }
 
       const response = await makeRequest(path, 'POST', body)
 
       if (!response.ok) {
-        throw new Error(`Jira search failed: ${response.status} ${response.statusText}`)
+        throw new Error(
+          `Jira search failed: ${response.status} ${response.statusText}`,
+        )
       }
 
       return await response.json() as AtlassianApiResponse
@@ -271,7 +292,9 @@ export async function createClient(options?: AtlassianClientOptions): Promise<At
       const response = await makeRequest(path)
 
       if (!response.ok) {
-        throw new Error(`Failed to get Jira issue: ${response.status} ${response.statusText}`)
+        throw new Error(
+          `Failed to get Jira issue: ${response.status} ${response.statusText}`,
+        )
       }
 
       return await response.json()
@@ -294,7 +317,8 @@ export async function createClient(options?: AtlassianClientOptions): Promise<At
         const error = await response.text()
         return {
           valid: false,
-          message: `Authentication failed: ${response.status} ${response.statusText}`,
+          message:
+            `Authentication failed: ${response.status} ${response.statusText}`,
           error,
         }
       } catch (error) {
@@ -311,7 +335,9 @@ export async function createClient(options?: AtlassianClientOptions): Promise<At
         const response = await makeRequest('/wiki/rest/api/space')
 
         if (!response.ok) {
-          throw new Error(`Failed to get spaces: ${response.status} ${response.statusText}`)
+          throw new Error(
+            `Failed to get spaces: ${response.status} ${response.statusText}`,
+          )
         }
 
         const data = await response.json() as AtlassianApiResponse

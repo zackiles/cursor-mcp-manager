@@ -164,7 +164,13 @@ async function pullDockerImage(imageName: string): Promise<boolean> {
 async function isContainerRunning(containerName: string): Promise<boolean> {
   try {
     const command = new Deno.Command('docker', {
-      args: ['ps', '--filter', `name=${containerName}`, '--format', '{{.Names}}'],
+      args: [
+        'ps',
+        '--filter',
+        `name=${containerName}`,
+        '--format',
+        '{{.Names}}',
+      ],
       stdout: 'piped',
     })
 
@@ -327,7 +333,10 @@ async function runContainer(options: {
     // Add port mappings if provided
     if (options.ports && options.ports.length > 0) {
       for (const portMapping of options.ports) {
-        dockerArgs.push('-p', `${portMapping.hostPort}:${portMapping.containerPort}`)
+        dockerArgs.push(
+          '-p',
+          `${portMapping.hostPort}:${portMapping.containerPort}`,
+        )
       }
     }
 
@@ -356,7 +365,9 @@ async function runContainer(options: {
 
     if (code !== 0) {
       const errorText = new TextDecoder().decode(stderr)
-      logger.error(`Failed to run container ${options.containerName}: ${errorText}`)
+      logger.error(
+        `Failed to run container ${options.containerName}: ${errorText}`,
+      )
       return { success: false, error: errorText }
     }
 
@@ -378,7 +389,14 @@ async function stopAndRemoveContainer(containerName: string): Promise<boolean> {
   try {
     // Check if container exists
     const checkCommand = new Deno.Command('docker', {
-      args: ['ps', '-a', '--filter', `name=${containerName}`, '--format', '{{.Names}}'],
+      args: [
+        'ps',
+        '-a',
+        '--filter',
+        `name=${containerName}`,
+        '--format',
+        '{{.Names}}',
+      ],
       stdout: 'piped',
     })
 
@@ -422,7 +440,10 @@ async function stopAndRemoveContainer(containerName: string): Promise<boolean> {
 
     return true
   } catch (error) {
-    logger.error(`Error stopping and removing container ${containerName}:`, error)
+    logger.error(
+      `Error stopping and removing container ${containerName}:`,
+      error,
+    )
     return false
   }
 }

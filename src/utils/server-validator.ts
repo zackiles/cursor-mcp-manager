@@ -13,7 +13,9 @@ import logger from './logger.ts'
  * @param serverName The name of the server to validate, or undefined if no specific server
  * @returns True if validation passes, false on failure
  */
-export async function validateServerSelection(serverName?: string): Promise<boolean> {
+export async function validateServerSelection(
+  serverName?: string,
+): Promise<boolean> {
   // If no specific server was provided, validation passes
   if (!serverName) {
     return true
@@ -30,8 +32,12 @@ export async function validateServerSelection(serverName?: string): Promise<bool
 
   // If the server is not enabled, show an error message
   if (!serverStatus) {
-    logger.error(`Server "${serverName}" is not enabled in ENABLED_SERVERS configuration.`)
-    logger.info('Check servers/config/main.env and ensure the server is listed in ENABLED_SERVERS.')
+    logger.error(
+      `Server "${serverName}" is not enabled in ENABLED_SERVERS configuration.`,
+    )
+    logger.info(
+      'Check servers/config/main.env and ensure the server is listed in ENABLED_SERVERS.',
+    )
     return false
   }
 

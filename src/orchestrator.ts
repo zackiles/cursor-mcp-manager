@@ -27,11 +27,23 @@ import {
   startDocker,
   stopAndRemoveContainer,
 } from './services/docker-service.ts'
-import { isPortOpen, validateServerHealth } from './services/health-validator-service.ts'
-import { confirm, displayCursorConfig, suggestEnvFileCreation } from './presentation.ts'
+import {
+  isPortOpen,
+  validateServerHealth,
+} from './services/health-validator-service.ts'
+import {
+  confirm,
+  displayCursorConfig,
+  suggestEnvFileCreation,
+} from './presentation.ts'
 import { getAppConfig, getEnvFilePath } from './config.ts'
 import { addMcpServers, getMcpServers } from './services/cursor-service.ts'
-import { getServerState, loadState, saveState, updateServerStatus } from './state.ts'
+import {
+  getServerState,
+  loadState,
+  saveState,
+  updateServerStatus,
+} from './state.ts'
 import { join } from '@std/path'
 import { getAvailablePort } from '@std/net'
 
@@ -42,7 +54,9 @@ import { getAvailablePort } from '@std/net'
  */
 async function checkDockerAvailability(): Promise<boolean> {
   if (!await isDockerInstalled()) {
-    logger.error('Docker is not installed. Please install Docker to use this command.')
+    logger.error(
+      'Docker is not installed. Please install Docker to use this command.',
+    )
     return false
   }
 
@@ -50,7 +64,9 @@ async function checkDockerAvailability(): Promise<boolean> {
 
   const started = await startDocker()
   if (!started) {
-    logger.error('Could not start Docker. Please start Docker manually and try again.')
+    logger.error(
+      'Could not start Docker. Please start Docker manually and try again.',
+    )
     return false
   }
 
@@ -121,7 +137,9 @@ function getAbsoluteEnvFilePathForCursor(serverName: string): string {
  * @param server Server configuration
  * @returns Cursor MCP entry
  */
-async function transformServerConfigForCursor(server: McpServerConfig): Promise<CursorMcpEntry> {
+async function transformServerConfigForCursor(
+  server: McpServerConfig,
+): Promise<CursorMcpEntry> {
   // First check if we have this server in the state file with a valid endpoint
   try {
     const state = await loadState()
@@ -129,14 +147,18 @@ async function transformServerConfigForCursor(server: McpServerConfig): Promise<
 
     // If server has a valid endpoint in state, use that for Cursor config
     if (serverState?.endpoint) {
-      if (server.type === 'http' && serverState.endpoint.startsWith('http://')) {
+      if (
+        server.type === 'http' && serverState.endpoint.startsWith('http://')
+      ) {
         // For HTTP servers, use the endpoint URL directly
         return {
           url: serverState.endpoint,
         } as CursorHttpMcpEntry
       }
 
-      if (server.type === 'stdio' && serverState.endpoint.startsWith('command:')) {
+      if (
+        server.type === 'stdio' && serverState.endpoint.startsWith('command:')
+      ) {
         // For STDIO servers, construct the args based on the stored endpoint
         // Since the command args may have changed, we still construct them fresh
         const dockerArgs = [
@@ -226,9 +248,13 @@ async function updateAndSaveServerState(
   await saveState(updatedState)
 
   if (endpoint) {
-    logger.debug(`Updated state file for ${serverName}: online=${isOnline}, endpoint=${endpoint}`)
+    logger.debug(
+      `Updated state file for ${serverName}: online=${isOnline}, endpoint=${endpoint}`,
+    )
   } else {
-    logger.debug(`Updated state file: ${serverName} ${isOnline ? 'online' : 'offline'}`)
+    logger.debug(
+      `Updated state file: ${serverName} ${isOnline ? 'online' : 'offline'}`,
+    )
   }
 }
 
@@ -240,7 +266,10 @@ async function updateAndSaveServerState(
  * @param port Port the server is running on
  * @returns true to indicate success
  */
-async function handleHttpServerSuccess(server: McpServerConfig, port: number): Promise<boolean> {
+async function handleHttpServerSuccess(
+  server: McpServerConfig,
+  port: number,
+): Promise<boolean> {
   const { name } = server
   const endpoint = `http://localhost:${port}/sse`
 
@@ -348,7 +377,9 @@ async function startHttpServer(server: McpServerConfig): Promise<boolean> {
         return await handleHttpServerSuccess(server, port)
       }
 
-      logger.warn(`A different server appears to be running on port ${port}. Failed health check.`)
+      logger.warn(
+        `A different server appears to be running on port ${port}. Failed health check.`,
+      )
       return false
     }
 
@@ -385,7 +416,9 @@ async function startHttpServer(server: McpServerConfig): Promise<boolean> {
       )
     }
 
-    logger.info(`Started ${name} container. Waiting for server to initialize...`)
+    logger.info(
+      `Started ${name} container. Waiting for server to initialize...`,
+    )
 
     // Wait for server initialization with quick port checks first
     let serverAvailable = false
@@ -400,7 +433,9 @@ async function startHttpServer(server: McpServerConfig): Promise<boolean> {
         break
       }
 
-      logger.debug(`Waiting for server (attempt ${attempt + 1}/${maxAttempts})...`)
+      logger.debug(
+        `Waiting for server (attempt ${attempt + 1}/${maxAttempts})...`,
+      )
     }
 
     if (!serverAvailable) {
@@ -412,7 +447,10 @@ async function startHttpServer(server: McpServerConfig): Promise<boolean> {
 
     // Final health check to ensure server is functioning correctly
     if (!await checkServerHealth(server, port)) {
-      return await handleHttpServerFailure(server, `Health check failed for ${name}`)
+      return await handleHttpServerFailure(
+        server,
+        `Health check failed for ${name}`,
+      )
     }
 
     // Server started successfully
@@ -433,7 +471,9 @@ async function validateStdioServer(server: McpServerConfig): Promise<boolean> {
 
   try {
     if (server.type !== 'stdio') {
-      logger.error(`Server ${name} is configured as STDIO type but has invalid type`)
+      logger.error(
+        `Server ${name} is configured as STDIO type but has invalid type`,
+      )
       return false
     }
 
@@ -524,7 +564,9 @@ async function healthCheck(server: McpServerConfig): Promise<boolean> {
     }
 
     if (!server.healthValidator) {
-      logger.info(`Skipping health check for ${name} as no healthValidator is configured`)
+      logger.info(
+        `Skipping health check for ${name} as no healthValidator is configured`,
+      )
       return true
     }
 
@@ -587,7 +629,9 @@ async function isServerRunning(server: McpServerConfig): Promise<boolean> {
       }
 
       // If we get here, we couldn't determine the port to check
-      logger.debug(`Could not determine port for ${name}, can't check if it's running`)
+      logger.debug(
+        `Could not determine port for ${name}, can't check if it's running`,
+      )
       return false
     }
 
@@ -649,7 +693,9 @@ async function updateCursorConfigForServer(
     const mcpConfigPath = appConfig.CURSOR_MCP_CONFIG_PATH
 
     if (!mcpConfigPath) {
-      logger.debug('Cursor MCP config file path not configured, skipping config update')
+      logger.debug(
+        'Cursor MCP config file path not configured, skipping config update',
+      )
       return true
     }
 
@@ -671,11 +717,15 @@ async function updateCursorConfigForServer(
       configChanged = currentConfigStr !== newConfigStr
 
       if (!configChanged) {
-        logger.debug(`Cursor config for ${server.name} is already up-to-date, no update needed`)
+        logger.debug(
+          `Cursor config for ${server.name} is already up-to-date, no update needed`,
+        )
         return true
       }
 
-      logger.debug(`Cursor config for ${server.name} has changed, update needed`)
+      logger.debug(
+        `Cursor config for ${server.name} has changed, update needed`,
+      )
     }
 
     // If not forcing update, prompt the user for confirmation

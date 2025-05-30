@@ -9,7 +9,11 @@ import logger from './utils/logger.ts'
 import { dedent } from '@qnighy/dedent'
 import type { CursorMcpEntry, McpServerConfig, McpStateFile } from './types.ts'
 import { getServerState } from './state.ts'
-import { getEnvExampleFilePath, getEnvFilePath, getExamplesPath } from './config.ts'
+import {
+  getEnvExampleFilePath,
+  getEnvFilePath,
+  getExamplesPath,
+} from './config.ts'
 import { join } from '@std/path'
 import { exists } from '@std/fs'
 import * as colors from '@std/fmt/colors'
@@ -22,7 +26,10 @@ import { promptSelect } from '@std/cli/unstable-prompt-select'
  * @param defaultYes Whether the default answer is yes
  * @returns True if the user answered yes, false otherwise
  */
-export async function confirm(question: string, defaultYes = true): Promise<boolean> {
+export async function confirm(
+  question: string,
+  defaultYes = true,
+): Promise<boolean> {
   const defaultOption = defaultYes ? 'Yes' : 'No'
   const options = defaultYes ? ['Yes', 'No'] : ['No', 'Yes']
 
@@ -190,7 +197,9 @@ function displaySingleServerStatus(
   isRunning: boolean,
   endpoint?: string,
 ): void {
-  console.log(`\n${colors.bold(`${server.description || server.name} Status:`)}\n`)
+  console.log(
+    `\n${colors.bold(`${server.description || server.name} Status:`)}\n`,
+  )
   console.log(`Name: ${colors.cyan(server.name)}`)
   console.log(`Type: ${colors.cyan(server.type)}`)
   console.log(`Environment: ${colors.cyan(getEnvFilePath(server.name))}`)
@@ -213,7 +222,9 @@ async function suggestEnvFileCreation(server: McpServerConfig): Promise<void> {
   const envExampleFilePath = getEnvExampleFilePath(server.name)
 
   console.error(colors.red(`Environment file not found: ${envFilePath}`))
-  console.error('You need to create an environment file with your credentials.\n')
+  console.error(
+    'You need to create an environment file with your credentials.\n',
+  )
 
   if (await exists(envExampleFilePath)) {
     console.error('You can create one by copying the example file:')

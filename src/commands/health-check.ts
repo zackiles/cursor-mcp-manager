@@ -1,8 +1,16 @@
-import type { CommandRouteDefinition, CommandRouteOptions } from '../utils/command-router.ts'
+import type {
+  CommandRouteDefinition,
+  CommandRouteOptions,
+} from '../utils/command-router.ts'
 import logger from '../utils/logger.ts'
 import { getMcpServerConfigs } from '../config.ts'
 import { healthCheck, updateCursorConfigForServer } from '../orchestrator.ts'
-import { loadState, saveState, syncStateWithConfig, updateServerStatus } from '../state.ts'
+import {
+  loadState,
+  saveState,
+  syncStateWithConfig,
+  updateServerStatus,
+} from '../state.ts'
 import { validateServerSelection } from '../utils/server-validator.ts'
 
 const commandRouteDefinition: CommandRouteDefinition = {
@@ -74,7 +82,9 @@ async function command({ args }: CommandRouteOptions): Promise<void> {
 
   // Provide summary
   logger.info(
-    `${header}\nHealth Check Summary: ${allHealthy ? 'ALL HEALTHY' : 'ISSUES DETECTED'}\n${header}`,
+    `${header}\nHealth Check Summary: ${
+      allHealthy ? 'ALL HEALTHY' : 'ISSUES DETECTED'
+    }\n${header}`,
   )
 }
 

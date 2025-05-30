@@ -1,4 +1,7 @@
-import type { CommandRouteDefinition, CommandRouteOptions } from '../utils/command-router.ts'
+import type {
+  CommandRouteDefinition,
+  CommandRouteOptions,
+} from '../utils/command-router.ts'
 import logger from '../utils/logger.ts'
 import { getMcpServerConfigs } from '../config.ts'
 import { isServerRunning } from '../orchestrator.ts'
@@ -58,7 +61,9 @@ async function command({ args }: CommandRouteOptions): Promise<void> {
     const isRunning = await isServerRunning(server)
 
     // Update state based on actual status
-    const mcpIndex = currentState.mcps.findIndex((mcp) => mcp.name === server.name)
+    const mcpIndex = currentState.mcps.findIndex((mcp) =>
+      mcp.name === server.name
+    )
     if (mcpIndex !== -1) {
       currentState.mcps[mcpIndex] = {
         ...currentState.mcps[mcpIndex],

@@ -20,7 +20,10 @@ if (import.meta.main) {
   await gracefulShutdown.startAndWrap(cli, logger)
 }
 
-export type { CommandRouteDefinition, CommandRouteOptions } from './utils/command-router.ts'
+export type {
+  CommandRouteDefinition,
+  CommandRouteOptions,
+} from './utils/command-router.ts'
 export type {
   CursorHttpMcpEntry,
   CursorMcpEntry,

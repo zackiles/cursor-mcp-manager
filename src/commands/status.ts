@@ -1,4 +1,7 @@
-import type { CommandRouteDefinition, CommandRouteOptions } from '../utils/command-router.ts'
+import type {
+  CommandRouteDefinition,
+  CommandRouteOptions,
+} from '../utils/command-router.ts'
 import logger from '../utils/logger.ts'
 import { getMcpServerConfigs } from '../config.ts'
 import { isServerRunning } from '../orchestrator.ts'
@@ -54,7 +57,9 @@ async function command({ args }: CommandRouteOptions): Promise<void> {
   for (const server of serversToProcess) {
     // Determine if running and update status message
     const isRunning = await isServerRunning(server)
-    const status = isRunning ? 'Running' : (server.type === 'stdio' ? 'On-Demand' : 'Stopped')
+    const status = isRunning
+      ? 'Running'
+      : (server.type === 'stdio' ? 'On-Demand' : 'Stopped')
     const statusPadding = ' '.repeat(12 - status.length)
     const typePadding = ' '.repeat(6 - server.type.length)
 

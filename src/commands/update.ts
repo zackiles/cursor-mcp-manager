@@ -1,4 +1,7 @@
-import type { CommandRouteDefinition, CommandRouteOptions } from '../utils/command-router.ts'
+import type {
+  CommandRouteDefinition,
+  CommandRouteOptions,
+} from '../utils/command-router.ts'
 import logger from '../utils/logger.ts'
 import { getMcpServerConfigs } from '../config.ts'
 import { checkDockerAvailability, updateServerImage } from '../orchestrator.ts'
@@ -72,8 +75,12 @@ async function command({ args }: CommandRouteOptions): Promise<void> {
 
   // Print summary
   logger.info(`${header}\nUpdate Summary\n${header}`)
-  logger.info(`HTTP Servers: ${successCount.http} updated, ${failCount.http} failed`)
-  logger.info(`STDIO Servers: ${successCount.stdio} updated, ${failCount.stdio} failed`)
+  logger.info(
+    `HTTP Servers: ${successCount.http} updated, ${failCount.http} failed`,
+  )
+  logger.info(
+    `STDIO Servers: ${successCount.stdio} updated, ${failCount.stdio} failed`,
+  )
   logger.info(
     `${header}\nUpdate ${
       allSuccessful ? 'COMPLETED SUCCESSFULLY' : 'COMPLETED WITH ERRORS'

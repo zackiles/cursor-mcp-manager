@@ -118,7 +118,10 @@ async function validateHttpHealth(
     const endpoint = `http://localhost:${port}/sse`
     const rpcRequest = createJsonRpcRequest(validator.method, validator.params)
 
-    logger.debug(`Sending health validation request to ${endpoint}:`, rpcRequest)
+    logger.debug(
+      `Sending health validation request to ${endpoint}:`,
+      rpcRequest,
+    )
 
     const controller = new AbortController()
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
@@ -152,7 +155,9 @@ async function validateHttpHealth(
     if (validator.responseContains) {
       const responseStr = JSON.stringify(responseData)
       if (!responseStr.includes(validator.responseContains)) {
-        logger.error(`Response does not contain required string: "${validator.responseContains}"`)
+        logger.error(
+          `Response does not contain required string: "${validator.responseContains}"`,
+        )
         return false
       }
     }
@@ -180,7 +185,10 @@ async function validateStdioHealth(
     const rpcRequest = createJsonRpcRequest(validator.method, validator.params)
     const requestJson = JSON.stringify(rpcRequest)
 
-    logger.debug(`Validating STDIO health for ${server.name} with request:`, rpcRequest)
+    logger.debug(
+      `Validating STDIO health for ${server.name} with request:`,
+      rpcRequest,
+    )
 
     const timeoutMs = validator.timeoutMs || 10000
 
@@ -219,7 +227,9 @@ async function validateStdioHealth(
     const stderrText = new TextDecoder().decode(stderr)
 
     if (code !== 0) {
-      logger.error(`Docker command failed with exit code ${code}: ${stderrText}`)
+      logger.error(
+        `Docker command failed with exit code ${code}: ${stderrText}`,
+      )
       return false
     }
 
@@ -262,7 +272,9 @@ async function validateStdioHealth(
     if (validator.responseContains) {
       const responseStr = JSON.stringify(responseData)
       if (!responseStr.includes(validator.responseContains)) {
-        logger.error(`Response does not contain required string: "${validator.responseContains}"`)
+        logger.error(
+          `Response does not contain required string: "${validator.responseContains}"`,
+        )
         return false
       }
     }
@@ -288,7 +300,9 @@ async function validateServerHealth(
 ): Promise<boolean> {
   if (!server.healthValidator) {
     if (!options?.silent) {
-      logger.info(`Skipping health check for ${server.name} as no healthValidator is configured`)
+      logger.info(
+        `Skipping health check for ${server.name} as no healthValidator is configured`,
+      )
     }
     return true
   }

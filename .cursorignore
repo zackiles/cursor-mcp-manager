@@ -1,6 +1,7 @@
 # Let cursor access data that was ignored in .gitignore
 !data
 !context/*
+!.cursor
 
 # Explicitly allow all files in context directory
 !deno.jsonc

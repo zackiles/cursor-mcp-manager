@@ -64,7 +64,10 @@ async function saveState(state: McpStateFile): Promise<void> {
       updatedOn: new Date().toISOString(),
     }
 
-    await Deno.writeTextFile(STATE_FILE_PATH, JSON.stringify(stateToSave, null, 2))
+    await Deno.writeTextFile(
+      STATE_FILE_PATH,
+      JSON.stringify(stateToSave, null, 2),
+    )
   } catch (error) {
     logger.error(`Error saving state file: ${error}`)
   }
@@ -161,7 +164,10 @@ function updateServerStatus(
  * Get server state by name
  * @returns McpState if found, null otherwise
  */
-function getServerState(state: McpStateFile, serverName: string): McpState | null {
+function getServerState(
+  state: McpStateFile,
+  serverName: string,
+): McpState | null {
   const serverState = state.mcps.find((mcp) => mcp.name === serverName)
   return serverState || null
 }
@@ -170,8 +176,13 @@ function getServerState(state: McpStateFile, serverName: string): McpState | nul
  * Add a new server state or update existing one
  * @returns Updated state file
  */
-function addOrUpdateServerState(state: McpStateFile, serverState: McpState): McpStateFile {
-  const existingIndex = state.mcps.findIndex((mcp) => mcp.name === serverState.name)
+function addOrUpdateServerState(
+  state: McpStateFile,
+  serverState: McpState,
+): McpStateFile {
+  const existingIndex = state.mcps.findIndex((mcp) =>
+    mcp.name === serverState.name
+  )
 
   const newMcps = [...state.mcps]
   if (existingIndex >= 0) {

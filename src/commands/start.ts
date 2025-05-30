@@ -1,8 +1,16 @@
-import type { CommandRouteDefinition, CommandRouteOptions } from '../utils/command-router.ts'
+import type {
+  CommandRouteDefinition,
+  CommandRouteOptions,
+} from '../utils/command-router.ts'
 import logger from '../utils/logger.ts'
 import { getAppConfig, getMcpServerConfigs } from '../config.ts'
 import { checkDockerAvailability, startServer } from '../orchestrator.ts'
-import { loadState, saveState, syncStateWithConfig, updateServerStatus } from '../state.ts'
+import {
+  loadState,
+  saveState,
+  syncStateWithConfig,
+  updateServerStatus,
+} from '../state.ts'
 import { validateServerSelection } from '../utils/server-validator.ts'
 import { dryRunAddServers } from '../utils/dry-run.ts'
 
@@ -17,7 +25,9 @@ const commandRouteDefinition: CommandRouteDefinition = {
   },
 }
 
-async function command({ args, routes: _ }: CommandRouteOptions): Promise<void> {
+async function command(
+  { args, routes: _ }: CommandRouteOptions,
+): Promise<void> {
   // Check if dry run mode is enabled
   const isDryRun = args['dry-run'] === true
   if (isDryRun) {
@@ -94,7 +104,9 @@ async function command({ args, routes: _ }: CommandRouteOptions): Promise<void> 
           } catch (parseError) {
             // If parsing fails, log a warning without the raw content.
             logger.warn(
-              `Could not parse ${mcpConfigPath} as JSON. Error: ${(parseError as Error).message}`,
+              `Could not parse ${mcpConfigPath} as JSON. Error: ${
+                (parseError as Error).message
+              }`,
             )
           }
         } catch (err) {
